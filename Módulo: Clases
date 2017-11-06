@@ -1,0 +1,90 @@
+"""
+Instituto Tecnológico de Costa Rica (ITCR)
+Escuela de Ingeniería en Computadores
+
+II Semestre 2017 - Taller de Programación
+Prof. Jeff Schmidt Peralta
+III Proyecto - Scamperghost
+Módulo: basic objects
+
+Lenguaje de Programación: Python 3
+"""
+
+### Flags ###
+
+### Basic Values ###
+
+hex_digs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
+pycolors = [(0, 0, 0), (255, 255, 255)]
+tkcolors = ["#000000", "#FFFFFF"]
+
+### Field ###
+
+class Position:
+    def __init__(self, vec_x, vec_y, chrct, item):
+        self.vec_x = vec_x
+        self.vec_y = vec_y
+        self.chrct = chrct
+        self.item = item
+
+class Field:
+    def __init__(self):
+        self.chart = []
+        i = 0
+        while len(self.chart) != 30:
+            line = []
+            j = 0
+            while len(line) != 32:
+                line.append(Position(i, j, None, None))
+                j += 1
+            self.chart.append(line)
+            i += 1
+
+    def __put_obj__(self, new_obj):
+        if isinstance(new_obj, (PacMan, Ghost)):
+            if self.chart[new_obj.pos_y][new_obj.pos_x].chrct == None:
+                self.chart[new_obj.pos_y][new_obj.pos_x].chrct = new_chrct
+            if self.chart[new_obj.pos_y][new_obj.pos_x].chrct != None:
+                print("")
+    def __erase_obj__(self, old_obj):
+        self.chart[old_obj.pos_y][old_obj.pos_x].chrct = None
+
+    def __eat_item__(self, pos):
+        pacman = self.chart[pos[1]][pos[0]].chrct
+        item = self.chart[pos[1]][pos[0]].item
+        if isinstance(pacman, PacMan) and isinstance(item, Item):
+            if item.kind == "coin":
+                pacman.score += 15
+                self.__erase_item__(item)
+
+### Characters ###
+
+class PacMan:
+    def __init__(self, state, pos_x, pos_y, speed):
+        self.state = state
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.speed = speed
+        self.lifes = 3
+        self.score = 0
+        self.buff = False
+
+    def __move__(direction):
+        if direction == "left":
+            if self.pos_x > 0:
+                self.pos_x -= 1
+        if direction == "right":
+            if self.pos_x < 32:
+                self.pos_x += 1
+        if direction == "up":
+            if self.pos_y > 0:
+                self.pos_y -= 1
+        if direction == "down":
+            if self.pos_y < 30:
+                self.pos_y += 1
+
+class Item:
+    def __init__(self, kind, pos_x, pos_y):
+        self.kind == kind
+        self.pos_x = pos_x
+        self.pos_y = pos_y
